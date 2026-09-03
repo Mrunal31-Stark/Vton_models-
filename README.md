@@ -1,4 +1,4 @@
-# Vizzle — Virtual Try-On Model Evaluation
+# Vizzle Virtual Try-On Model Evaluation
 
 **Goal:** find the VTON model with best accuracy across **all 10 clothing categories**
 while staying **< 15 s/generation** and **< Rs 4/generation**.

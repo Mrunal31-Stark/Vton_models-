@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vizzle Virtual Try On Evaluation Report</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  h1 { font-size: 21pt; margin: 0 0 4pt; }
+  h2 {
+    font-size: 14pt;
+    margin: 22pt 0 8pt;
+    padding-bottom: 3pt;
+    border-bottom: 2px solid #333;
+    page-break-after: avoid;
+  }
+  h3 { font-size: 11.5pt; margin: 14pt 0 5pt; page-break-after: avoid; }
+  p { margin: 6pt 0; }
+  ul { margin: 6pt 0; padding-left: 18pt; }
+  li { margin: 3pt 0; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8pt 0 12pt;
+    font-size: 9pt;
+    page-break-inside: auto;
+  }
+  th, td {
+    border: 1px solid #bbb;
+    padding: 4pt 6pt;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #ececec; font-weight: 600; }
+  tr { page-break-inside: avoid; }
+  .num { text-align: right; }
+  .lead {
+    font-size: 10.5pt;
+    background: #f4f4f4;
+    border-left: 4px solid #333;
+    padding: 8pt 12pt;
+    margin: 10pt 0;
+  }
+  .meta { color: #555; font-size: 9.5pt; margin-bottom: 16pt; }
+  .pagebreak { page-break-before: always; }
+  code {
+    font-family: "Consolas", monospace;
+    font-size: 8.7pt;
+    background: #f0f0f0;
+    padding: 0 2pt;
+  }
+  .toc ol { padding-left: 20pt; }
+  .toc li { margin: 2pt 0; }
+  .footeratt { margin-top: 20pt; font-size: 8.5pt; color: #666; border-top: 1px solid #ccc; padding-top: 6pt; }
+</style>
+</head>
+<body>
+
+<h1>Virtual Try On Model Evaluation</h1>
+<p class="meta">
+Prepared for Vizzle. Assessment deliverable. Compiled 3 September 2026.<br>
+Scope: model research, shortlist against the accuracy, speed and cost gates, a category by category
+test across ten clothing types, and a single recommended model.
+</p>
+
+<div class="lead">
+<strong>Summary.</strong> Three try on models were tested, all self hosted on one NVIDIA RTX 4090:
+IDM-VTON (with and without a category aware optimization layer), CatVTON, and Leffa. Every model
+clears both gates by a wide margin, so the decision is accuracy. Across three test rounds on full
+length person photos with the client garments, prompts and reference looks, IDM-VTON with the
+optimization layer scores a mean accuracy of 4.18 out of 5 and wins or ties ten of the eleven
+tested categories. CatVTON scores 3.53 and Leffa scores 3.33.
+<strong>Recommended model: IDM-VTON, self hosted, with the category aware optimization layer.</strong>
+Total testing spend was 3.16 US dollars against a 10 US dollar cap.
+</div>
+
+<div class="toc">
+<h3>Contents</h3>
+<ol>
+  <li>Market research and shortlist</li>
+  <li>Test method and scoring rubric</li>
+  <li>Per category scores</li>
+  <li>Model comparison</li>
+  <li>Best model per category</li>
+  <li>Recommendation</li>
+  <li>Cost ledger</li>
+</ol>
+</div>
+
+<h2>1. Market research and shortlist</h2>
+
+<p>
+Target unit cost is Rupees 4 per generation, about 0.045 US dollars per image. Target speed is
+under 15 seconds per generation. Two families of options were reviewed: commercial hosted APIs,
+and open source models that can be self hosted on a rented GPU.
+</p>
+
+<h3>1.1 Commercial and hosted APIs</h3>
+<table>
+<thead>
+<tr><th>Model or API</th><th class="num">USD per image</th><th>Speed</th><th>Resolution</th><th>Notes</th><th>In budget</th></tr>
+</thead>
+<tbody>
+<tr><td>FASHN v1.6</td><td class="num">0.075, falling below 0.04 at volume</td><td>5 to 10 s</td><td>864 by 1296</td><td>Best text and print fidelity. Lower body results mixed.</td><td>No at low volume</td></tr>
+<tr><td>Kling Kolors v1.5</td><td class="num">0.07</td><td>seconds</td><td>variable</td><td>Holds pose, skin and body. Can flatten fabric detail.</td><td>No</td></tr>
+<tr><td>Google Nano Banana Pro (Gemini Flash Image)</td><td class="num">about 0.06 to 0.14</td><td>seconds</td><td>high</td><td>Prompt driven, natural composites, not deterministic.</td><td>No</td></tr>
+<tr><td>FLUX Virtual Try On Pro (fal)</td><td class="num">0.0375 per megapixel</td><td>5 to 10 s</td><td>variable</td><td>Styling prompts. Held dress colour well.</td><td>Borderline yes</td></tr>
+<tr><td>image-apps-v2 (fal)</td><td class="num">0.04</td><td>about 10 s</td><td>up to 4K</td><td>Simple two image input, full length placement.</td><td>Yes</td></tr>
+<tr><td>Flux 2 LoRA try on (fal)</td><td class="num">0.021 per megapixel</td><td>about 10 s</td><td>variable</td><td>Adjustable transfer strength.</td><td>Yes</td></tr>
+<tr><td>Leffa (fal)</td><td class="num">0.10</td><td>about 8 s</td><td>variable</td><td>Commercial cleared. Explicit garment type. Free when self hosted.</td><td>No on fal, yes self hosted</td></tr>
+</tbody>
+</table>
+
+<h3>1.2 Open source models, self hosted on RunPod</h3>
+<p>Self hosting on a rented RTX 4090 is the way to reach the Rupees 4 target. The GPU rents for
+roughly 0.40 to 0.74 US dollars per hour, which is a fraction of a cent per image at about
+10 seconds per image.</p>
+<table>
+<thead>
+<tr><th>Model</th><th>Repository</th><th class="num">Self host USD per image</th><th>Speed</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>IDM-VTON</td><td>yisol/IDM-VTON, ECCV 2024</td><td class="num">about 0.002</td><td>10 to 15 s</td><td>Strong on upper body and dresses. Weak on saree and kurti out of the box.</td></tr>
+<tr><td>CatVTON</td><td>Zheng-Chong/CatVTON</td><td class="num">about 0.001</td><td>5 to 8 s</td><td>Lightweight, fast, fewer parameters.</td></tr>
+<tr><td>Leffa</td><td>franciszzj/Leffa, Meta</td><td class="num">about 0.003</td><td>8 to 12 s</td><td>Upper, lower and dress modes. Good pose preservation.</td></tr>
+<tr><td>OOTDiffusion</td><td>levihsu/OOTDiffusion</td><td class="num">about 0.002</td><td>about 10 s</td><td>Half and full body modes. Held as a backup.</td></tr>
+<tr><td>Kolors VTON weights</td><td>Kwai-Kolors</td><td class="num">about 0.003</td><td>about 8 s</td><td>Open weights of the Kling model. Held as a backup.</td></tr>
+</tbody>
+</table>
+
+<h3>1.3 Shortlist taken forward</h3>
+<p>
+IDM-VTON, CatVTON and Leffa were taken into full testing, all self hosted on one RTX 4090. This
+combination covers the strongest published accuracy for Indian wear and dresses (IDM-VTON), the
+fastest and cheapest option (CatVTON), and the best pose preservation (Leffa), while keeping every
+generation far inside both gates. FLUX Pro Virtual Try On and image-apps-v2 were researched and
+priced but not tested, because the fal account was unfunded and locked during the assessment.
+</p>
+
+<h3>1.4 Sources</h3>
+<ul>
+<li>fal.ai, 10 Best Virtual Try On APIs 2026: https://fal.ai/learn/tools/best-virtual-try-on-apis-2026</li>
+<li>FASHN, Top 4 Open Source VITON Models: https://fashn.ai/blog/comparing-the-top-4-open-source-virtual-try-on-viton-models</li>
+<li>ionio.ai, VTON models compared: https://www.ionio.ai/blog/vton</li>
+<li>pixazo, Best Try On APIs 2026: https://www.pixazo.ai/blog/best-virtual-try-on-api</li>
+<li>fal model pages: fal-ai/leffa/virtual-tryon, fal-ai/kling/v1-5/kolors-virtual-try-on, fal-ai/fashn/tryon/v1.5</li>
+</ul>
+
+<h2 class="pagebreak">2. Test method and scoring rubric</h2>
+
+<p>
+Each shortlisted model was run over the ten clothing categories in the brief: saree, kurti,
+lehenga, top, jumpsuit, t-shirt, shirt, coat, jeans and trousers. Coat was additionally tested on
+a female model, listed as coat (women), giving eleven test cases per model. The same person photo
+and the same garment photo were used across models within each category, so the only variable is
+the model.
+</p>
+
+<h3>2.1 Person and garment photos</h3>
+<p>
+Both person photos are full length, from head to feet. The female model wears a beige kurta set.
+The male model wears a black polo shirt, cream chinos and white trainers on a plain background.
+The male base was changed to this casual full length photo during round 3, so that grey jeans and
+charcoal trousers show with proper contrast and the whole leg and the feet stay in frame.
+Menswear was run again on this base. Womenswear was left unchanged from round 2. Garment photos are
+one product shot per category. Client supplied reference images were used to define the target
+look for each category.
+</p>
+
+<h3>2.2 The optimization layer</h3>
+<p>
+For IDM-VTON, an optional optimization layer was built for the harder categories. It has no fine
+tuning and no training. It applies a category aware full body mask so long garments are not
+capped at the waist, the client written prompt for each garment compressed to the 77 token limit
+of the text encoder, tuned diffusion steps and guidance, a mask union that absorbs a hanging
+dupatta or scarf so it does not leave a floating fabric artefact, and a light face and hair paste
+back on the full body runs to hold identity. The effective IDM-VTON result uses the optimized
+output for saree, kurti, lehenga, jumpsuit, coat and coat (women), and the baseline output for
+top, t-shirt, shirt, jeans and trousers.
+</p>
+
+<h3>2.3 Scoring rubric</h3>
+<p>Each result was scored 1 to 5 on five axes, where 5 is best. The mean is the average of the five.</p>
+<table>
+<thead><tr><th>Axis</th><th>What it measures</th></tr></thead>
+<tbody>
+<tr><td>Fit</td><td>Garment shape, length and placement on the body</td></tr>
+<tr><td>Drape</td><td>How the fabric falls, pleats and folds</td></tr>
+<tr><td>Texture fidelity</td><td>Colour, pattern and weave matching the garment photo</td></tr>
+<tr><td>Artefact free</td><td>Absence of floating fabric, bleed, warping or extra limbs. 5 means none.</td></tr>
+<tr><td>Face and body preservation</td><td>Identity, face and body of the person kept intact</td></tr>
+</tbody>
+</table>
+
+<h3>2.4 Gates</h3>
+<p>
+Both gates are generation time under 15 seconds and cost under Rupees 4 per image. Every tested
+model on the RTX 4090 runs at 5.6 to 11.2 seconds of GPU time and Rupees 0.10 to 0.20 per image,
+which is an order of magnitude inside both gates. Because all models pass, the ranking is decided
+on accuracy alone.
+</p>
+
+<h2 class="pagebreak">3. Per category scores</h2>
+<p>
+Scores are from round 3. IDM-VTON rows use the optimized output where one exists. Womenswear rows
+for CatVTON and Leffa are round 2 outputs on the same unchanged female model.
+</p>
+<table>
+<thead>
+<tr><th>Model</th><th>Category</th><th>Variant</th><th class="num">Fit</th><th class="num">Drape</th><th class="num">Texture</th><th class="num">Artefact free</th><th class="num">Identity</th><th class="num">Mean</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>IDM-VTON</td><td>saree</td><td>optimized</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">4.2</td><td>Floor length black saree with a matching black blouse and the pallu over the left shoulder. The mask fix keeps it clean. Face paste back preserves identity.</td></tr>
+<tr><td>IDM-VTON</td><td>kurti</td><td>optimized</td><td class="num">5</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">5</td><td class="num">4.6</td><td>Knee length kurti kept over the churidar. Placket, collar and side slits present. Catalogue grade.</td></tr>
+<tr><td>IDM-VTON</td><td>lehenga</td><td>optimized</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">4.2</td><td>Choli with a floor length embroidered flared skirt and a sheer dupatta.</td></tr>
+<tr><td>IDM-VTON</td><td>top</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">4.2</td><td>Blue velvet wrap top with the side tie visible. Kept the palazzo and identity.</td></tr>
+<tr><td>IDM-VTON</td><td>jumpsuit</td><td>optimized</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">4.2</td><td>Black sleeveless wide leg jumpsuit with a collar and a tie belt. Clean.</td></tr>
+<tr><td>IDM-VTON</td><td>t-shirt</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">4.2</td><td>Clean black crew tee. The garment photo was black on black so it was rebuilt from a plain flat lay. Natural fit, kept chinos and trainers.</td></tr>
+<tr><td>IDM-VTON</td><td>shirt</td><td>baseline</td><td class="num">5</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">5</td><td class="num">4.6</td><td>Blue and black plaid flannel button up over the chinos. Plaid crisp, full length, identity intact.</td></tr>
+<tr><td>IDM-VTON</td><td>jeans</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4.0</td><td>Denim applied with a visible weave and five pocket styling, full leg to the ankle. Renders a touch darker than the grey source.</td></tr>
+<tr><td>IDM-VTON</td><td>trousers</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4.0</td><td>Charcoal trousers applied cleanly, full leg, kept the polo and trainers.</td></tr>
+<tr><td>IDM-VTON</td><td>coat (men)</td><td>optimized</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">3.4</td><td>Knee length beige overcoat worn open over the outfit. The casual base means no white shirt and tie shows through as in the reference. The half redrawn polo reads as a dark top tucked into dark trousers. Face also drifts slightly on the full body mask. Known residual: needs a formal base photo or a prompt directed model to reproduce the shirt and tie look.</td></tr>
+<tr><td>IDM-VTON</td><td>coat (women)</td><td>optimized</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">5</td><td class="num">4.4</td><td>Black belted knee length wool coat with a fur collar. Clean layered drape, identity intact.</td></tr>
+<tr><td>CatVTON</td><td>saree</td><td>baseline</td><td class="num">3</td><td class="num">2</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">3.2</td><td>Black one shoulder gown with a thigh slit. Full length but no pleats, no pallu wrap and no blouse.</td></tr>
+<tr><td>CatVTON</td><td>kurti</td><td>baseline</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">3.6</td><td>Full length kurti. The dupatta becomes a stiff cape on the arm.</td></tr>
+<tr><td>CatVTON</td><td>lehenga</td><td>baseline</td><td class="num">4</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">3.6</td><td>Full three piece. Dupatta cape artefact. Embroidery soft.</td></tr>
+<tr><td>CatVTON</td><td>top</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">3.8</td><td>Velvet wrap top faithful. Dupatta cape artefact.</td></tr>
+<tr><td>CatVTON</td><td>jumpsuit</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">3.4</td><td>Black jumpsuit. The overall mask leaves the beige palazzo bleeding through one leg.</td></tr>
+<tr><td>CatVTON</td><td>t-shirt</td><td>baseline</td><td class="num">2</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">3.0</td><td>Renders the black tee as a tan long sleeve mock neck. Colour and sleeve length both wrong. No text control to correct it.</td></tr>
+<tr><td>CatVTON</td><td>shirt</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">4.2</td><td>Plaid flannel correct, chinos preserved, clean.</td></tr>
+<tr><td>CatVTON</td><td>jeans</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4.0</td><td>Grey denim applied with visible texture, full leg, polo kept.</td></tr>
+<tr><td>CatVTON</td><td>trousers</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4.0</td><td>Charcoal trousers applied cleanly, full leg.</td></tr>
+<tr><td>CatVTON</td><td>coat (men)</td><td>baseline</td><td class="num">3</td><td class="num">2</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">3.0</td><td>With the upper body mask it becomes a short beige blazer with beige trousers, not a knee length coat. With the full mask it wipes the person entirely.</td></tr>
+<tr><td>CatVTON</td><td>coat (women)</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="num">4</td><td class="num">3.0</td><td>Short coat, dupatta drape artefact, the beige palazzo still showing.</td></tr>
+<tr><td>Leffa</td><td>saree</td><td>baseline</td><td class="num">2</td><td class="num">2</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">2.8</td><td>Black asymmetric drape over the churidar, not a saree. Grey sheer dupatta artefact.</td></tr>
+<tr><td>Leffa</td><td>kurti</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="num">4</td><td class="num">3.0</td><td>Full length kurti with an oversized tan cape artefact from the dupatta.</td></tr>
+<tr><td>Leffa</td><td>lehenga</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">3.8</td><td>Flowy floor length gold gown. Reasonable.</td></tr>
+<tr><td>Leffa</td><td>top</td><td>baseline</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">3.6</td><td>Velvet wrap top with a large blue drape down the side.</td></tr>
+<tr><td>Leffa</td><td>jumpsuit</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">2</td><td class="num">4</td><td class="num">3.2</td><td>Black jumpsuit with an orange fur blob from the dupatta at the shoulder.</td></tr>
+<tr><td>Leffa</td><td>t-shirt</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">3.2</td><td>Barely changes the polo. Low garment fidelity.</td></tr>
+<tr><td>Leffa</td><td>shirt</td><td>baseline</td><td class="num">2</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">2.8</td><td>Over applies the plaid to the whole outfit, giving a plaid jacket and plaid trousers.</td></tr>
+<tr><td>Leffa</td><td>jeans</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4.0</td><td>Grey denim applied, full leg, polo kept. Improved on the full length base.</td></tr>
+<tr><td>Leffa</td><td>trousers</td><td>baseline</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">3.8</td><td>Charcoal trousers applied, full leg. Improved on the full length base.</td></tr>
+<tr><td>Leffa</td><td>coat (men)</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">3.6</td><td>Beige coat rendered closed as a coat suit, no shirt or collar showing.</td></tr>
+<tr><td>Leffa</td><td>coat (women)</td><td>baseline</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="num">3</td><td class="num">2.8</td><td>Black coat with a burgundy sheer dupatta artefact.</td></tr>
+</tbody>
+</table>
+
+<h2 class="pagebreak">4. Model comparison</h2>
+
+<h3>4.1 Speed and cost per generation</h3>
+<p>
+Measured on one RTX 4090 at 0.74 US dollars per hour. GPU seconds only. Rupees per image uses
+Rupees 65 per hour.
+</p>
+<table>
+<thead><tr><th>Model</th><th class="num">Generation time</th><th class="num">Cost per image</th></tr></thead>
+<tbody>
+<tr><td>CatVTON</td><td class="num">5.6 s</td><td class="num">Rupees 0.10</td></tr>
+<tr><td>Leffa, self hosted</td><td class="num">6.6 s</td><td class="num">Rupees 0.12</td></tr>
+<tr><td>IDM-VTON baseline</td><td class="num">6.8 s</td><td class="num">Rupees 0.12</td></tr>
+<tr><td>IDM-VTON optimized</td><td class="num">7.7 to 8.6 s</td><td class="num">Rupees 0.14 to 0.16</td></tr>
+</tbody>
+</table>
+<p>
+All values are far inside the Rupees 4 and 15 second gates. Even at a hosted serverless 4090 rate
+of about 1.10 US dollars per hour, the worst case is about Rupees 0.25 per image.
+</p>
+
+<h3>4.2 Mean accuracy rollup</h3>
+<table>
+<thead><tr><th>Model</th><th class="num">Categories</th><th class="num">Mean accuracy</th><th>Weakest category</th></tr></thead>
+<tbody>
+<tr><td>IDM-VTON, effective (optimized where available)</td><td class="num">11</td><td class="num">4.18</td><td>coat (men) at 3.4, no shirt and tie under the open coat</td></tr>
+<tr><td>CatVTON, baseline</td><td class="num">11</td><td class="num">3.53</td><td>t-shirt at 3.0, colour and sleeve wrong, no text control</td></tr>
+<tr><td>Leffa, baseline</td><td class="num">11</td><td class="num">3.33</td><td>saree at 2.8</td></tr>
+</tbody>
+</table>
+<p>
+For reference, the IDM-VTON baseline alone (no optimization) means 4.20 over the five categories
+where a baseline was scored, and the optimized set means 4.17 over its six categories. The
+effective figure of 4.18 is the one to compare against the other models, since it is the output a
+production setup would actually serve.
+</p>
+
+<h3>4.3 Round 3 dataset note</h3>
+<p>
+Coat is tested on both models. The male base changed to a casual full length photo, which fixed
+grey jeans and charcoal trousers but removed the shirt and tie that used to sit under the coat.
+IDM-VTON only repaints the coat region, so it cannot create a white shirt and tie that is not in
+the base photo. The opening of the coat therefore shows the half redrawn polo. This is an
+accepted limitation and is scored down. The women's coat does not have a shirt and tie in the
+brief and is unaffected.
+</p>
+
+<h2>5. Best model per category</h2>
+<table>
+<thead><tr><th>Category</th><th>Winner</th><th class="num">Score</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>saree</td><td>IDM-VTON, optimized</td><td class="num">4.2</td><td>Only result with a real floor length drape, a pallu and a matching blouse.</td></tr>
+<tr><td>kurti</td><td>IDM-VTON, optimized</td><td class="num">4.6</td><td>Full length with a placket. The others add a dupatta cape.</td></tr>
+<tr><td>lehenga</td><td>IDM-VTON, optimized</td><td class="num">4.2</td><td>Choli, floor length embroidered skirt and a sheer dupatta. Cleanest.</td></tr>
+<tr><td>top</td><td>IDM-VTON</td><td class="num">4.2</td><td>Velvet wrap faithful, no side drape artefact.</td></tr>
+<tr><td>jumpsuit</td><td>IDM-VTON, optimized</td><td class="num">4.2</td><td>Clean wide leg jumpsuit. CatVTON bleeds the palazzo, Leffa adds a blob.</td></tr>
+<tr><td>t-shirt</td><td>IDM-VTON</td><td class="num">4.2</td><td>Clean black tee. CatVTON turns it tan long sleeve, Leffa barely applies it.</td></tr>
+<tr><td>shirt</td><td>IDM-VTON</td><td class="num">4.6</td><td>Plaid flannel crisp. CatVTON close at 4.2. Leffa turns it into a plaid suit.</td></tr>
+<tr><td>jeans</td><td>IDM-VTON, CatVTON and Leffa tie</td><td class="num">4.0</td><td>All three apply denim cleanly on the full length base.</td></tr>
+<tr><td>trousers</td><td>IDM-VTON and CatVTON tie</td><td class="num">4.0</td><td>Both clean. Leffa at 3.8.</td></tr>
+<tr><td>coat (men)</td><td>Leffa 3.6, IDM-VTON optimized 3.4</td><td class="num">3.4 to 3.6</td><td>Weakest category for every model. None reproduce the reference shirt and tie because the base is a casual polo. The Leffa closed coat scores marginally higher on the rubric. The IDM-VTON open knee length silhouette matches the client brief better. CatVTON is 3.0 with a short blazer.</td></tr>
+<tr><td>coat (women)</td><td>IDM-VTON, optimized</td><td class="num">4.4</td><td>Belted wool coat with a fur collar, clean. The others add a dupatta artefact.</td></tr>
+</tbody>
+</table>
+<p>
+IDM-VTON wins or ties ten of the eleven categories and is the clear best on the eight hardest.
+The one exception is coat on the male model, where no model does well.
+</p>
+
+<h2 class="pagebreak">6. Recommendation</h2>
+
+<h3>6.1 Primary: IDM-VTON with the category aware optimization layer</h3>
+<p>
+Run IDM-VTON self hosted on one RTX 4090, with the optimization layer for the harder categories.
+The layer uses a category aware full body mask, the client prompts compressed to the 77 token
+limit of the text encoder, tuned steps and guidance, a mask union that removes hanging fabric
+artefacts, and a light face and hair paste back on the full body runs. There is no fine tuning
+and no training.
+</p>
+<ul>
+<li>Best or tied on ten of the eleven categories across three test rounds, and the clear best on the eight hardest.</li>
+<li>The only model that adds a matching blouse under the saree and renders the coat open.</li>
+<li>Self hosted cost is about 8 to 11 seconds per image and about Rupees 0.16 to 0.20 per image, an order of magnitude inside both gates, with no per call vendor fee and no rate limit.</li>
+<li>Accepted residual: coat on a male model. IDM-VTON repaints only the coat region, so with a casual base photo it cannot show a white shirt and tie through the open front, and the face drifts slightly on the full body mask. Two fixes, neither done in order to stay inside budget: use a formal male base photo wearing a shirt, a tie and trousers and run again coat only for about 0.30 US dollars, or use a prompt directed model such as FLUX Pro Virtual Try On, which needs fal funding. The women's coat is unaffected.</li>
+</ul>
+
+<h3>6.2 Fallback for high throughput: CatVTON</h3>
+<p>
+CatVTON is the fastest at about 5.8 seconds and the cheapest at about Rupees 0.10 per image, and
+it is solid on menswear and simple tops. It has no text control, so it is weak on Indian wear,
+the plain black tee and coats. Use it for a low latency or lowest cost tier where drape on Indian
+wear is not the priority.
+</p>
+
+<h3>6.3 Not recommended: Leffa</h3>
+<p>
+Leffa improved on jeans and trousers with the full length base, but it still over applies patterns
+so a plaid shirt becomes a full plaid suit, it barely applies plain tees, it renders the coat
+closed, and it adds hanging fabric artefacts. Its fal price of 0.10 US dollars per image is also
+over the Rupees 4 gate.
+</p>
+
+<h3>6.4 Not tested: FLUX Pro Virtual Try On and image-apps-v2</h3>
+<p>
+Both are hosted only on fal, and the fal account was unfunded and locked during the assessment.
+Researched cost is about Rupees 3.4 and Rupees 3.5 per image, just inside the gate. FLUX Pro is
+prompt directed like the IDM-VTON optimization and is the single biggest remaining quality lever
+for the coat worn open over a shirt and tie, for saree pallu realism, and for locking the face on
+full body runs. Funding fal with about 5 to 10 US dollars would allow this test.
+</p>
+
+<h2>7. Cost ledger</h2>
+<p>Hard cap 10.00 US dollars. Every RunPod invoice and any fal usage export is kept for
+reimbursement, which is payable only if the work is selected.</p>
+<table>
+<thead><tr><th>Date</th><th>Item</th><th>Detail</th><th class="num">USD</th></tr></thead>
+<tbody>
+<tr><td>2 September 2026</td><td>RunPod credit</td><td>Pre loaded, not a spend</td><td class="num">plus 15.00</td></tr>
+<tr><td>2 September 2026</td><td>RunPod RTX 4090 secure, EU-RO-1, plus 70 GB network volume</td><td>Four pods on one network volume across three test rounds: environment setup four times, smoke tests, IDM-VTON baseline and optimized with prompt and mask iteration, CatVTON, and Leffa in an isolated environment. Round 1 was ten categories, round 2 was eleven with full body models and coat on both, round 3 was a menswear run again on a casual full length male plus coat and prompt tuning. About 4.3 pod hours in total.</td><td class="num">about 3.16</td></tr>
+<tr><td></td><td>fal.ai, FLUX Pro Virtual Try On and image-apps-v2</td><td>Account unfunded, zero balance and locked, so not tested</td><td class="num">0.00</td></tr>
+<tr><td></td><td></td><td><strong>Total testing spend</strong></td><td class="num"><strong>about 3.16</strong></td></tr>
+</tbody>
+</table>
+<p>
+Verified against the RunPod balance: 15.00 US dollars falling to 11.84 US dollars, which is 3.16
+US dollars of actual spend across three rounds, about 32 percent of the 10 US dollar cap.
+</p>
+
+<h3>7.1 Per generation unit cost, the figure the brief asks for</h3>
+<p>GPU seconds only, on one RTX 4090 at 0.74 US dollars per hour, which is about Rupees 65 per hour.</p>
+<table>
+<thead><tr><th>Model</th><th class="num">Generation time</th><th class="num">Cost per image</th></tr></thead>
+<tbody>
+<tr><td>CatVTON</td><td class="num">5.6 s</td><td class="num">Rupees 0.10</td></tr>
+<tr><td>Leffa, self hosted</td><td class="num">6.6 s</td><td class="num">Rupees 0.12</td></tr>
+<tr><td>IDM-VTON baseline</td><td class="num">6.8 s</td><td class="num">Rupees 0.12</td></tr>
+<tr><td>IDM-VTON optimized</td><td class="num">7.7 to 8.6 s</td><td class="num">Rupees 0.14 to 0.16</td></tr>
+</tbody>
+</table>
+<p>
+All are far inside the Rupees 4 and 15 second gates. Even at a hosted serverless 4090 rate of
+about 1.10 US dollars per hour the worst case is about Rupees 0.25 per image. The results log
+records the per run cost in US dollars and in Rupees, and the harness halts automatically if the
+cumulative spend ever reaches 10 US dollars.
+</p>
+
+<h3>7.2 Not tested, hosted only, fal account unfunded</h3>
+<table>
+<thead><tr><th>Model</th><th class="num">Researched price</th><th>Against the Rupees 4 gate</th></tr></thead>
+<tbody>
+<tr><td>FLUX Pro Virtual Try On, fal-ai/flux-pro/v1/vto</td><td class="num">0.0375 per megapixel, about Rupees 3.4</td><td>Just under</td></tr>
+<tr><td>image-apps-v2, fal-ai/image-apps-v2/virtual-try-on</td><td class="num">0.04, about Rupees 3.5</td><td>Just under</td></tr>
+<tr><td>Leffa on fal, fal-ai/leffa/virtual-tryon</td><td class="num">0.10, about Rupees 8.8</td><td>Over the gate, so self hosted instead</td></tr>
+</tbody>
+</table>
+
+<p class="footeratt">
+Compiled from the project files research.md, scores.csv, comparison.md and COST_LEDGER.md.
+Currency conversion uses 1 US dollar of about Rupees 88 and 1 Rupee of about 0.0113 US dollars.
+</p>
+
+</body>
+</html>

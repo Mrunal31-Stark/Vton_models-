@@ -1,0 +1,26 @@
+{
+  "_comment": "Frozen test set. Same person + garment fed to every model. `python scripts/verify_assets.py` writes a contact sheet.",
+  "_round": "Round 3 (2026-09-02 pm): male person swapped to a full head-to-toe casual base (Indian man, black polo + cream chinos + sneakers, plain bg) so menswear jeans/trousers/t-shirt render with proper contrast and full leg. Womenswear + female model unchanged from round 2. t-shirt.jpg rebuilt as a clean black tee from a plain flat-lay (original was black-on-black, unsegmentable). coat now coat-over-polo (lost the shirt+tie of the round-2 suited base).",
+  "persons": {
+    "female": "MANUAL: user-supplied. Indian woman, full head-to-toe, plain white bg, wearing a beige kurta set (kurti + palazzo + dupatta). Good base for Indian wear.",
+    "male": "MANUAL: user-supplied. Indian man, full head-to-toe, plain grey bg, black polo + cream chinos + white sneakers, hands in pockets. Round-3 replacement for the suited man (kept as _male_suited_prev.jpg)."
+  },
+  "garments": {
+    "saree": "MANUAL: user-supplied. Plain black draped georgette saree on a form. Expected look: assets/reference/saree_expected_look.png (black sequin saree + matching short-sleeve blouse, floor-length, pallu over left shoulder).",
+    "kurti": "MANUAL: user-supplied. Beige long straight kurti, mandarin collar, button placket, 3/4 sleeves.",
+    "lehenga": "MANUAL: user-supplied. Gold sequined lehenga set (cropped choli + flared floor-length skirt + dupatta). Expected: assets/reference/lehenga_expected_look.png.",
+    "top": "MANUAL: user-supplied. Blue velvet surplice wrap top. Expected: assets/reference/top_expected_look.png.",
+    "jumpsuit": "MANUAL: user-supplied. Black sleeveless wide-leg jumpsuit with collar, button front, tie belt (shown on a model). Expected: assets/reference/Jumpsuit_expected_look.png.",
+    "t-shirt": "MANUAL: user-supplied plain black crew-neck tee. Original was black-on-black (near invisible) -> round 3: rebuilt as a clean solid-black crew tee from a plain flat-lay so it segments cleanly.",
+    "shirt": "MANUAL: user-supplied. Blue/black plaid flannel button-up shirt, on white. Expected: assets/reference/male_shirt_expected_look.png.",
+    "coat": "MANUAL: user-supplied. Men's beige overcoat, on white. Worn OPEN over the suit -> expected: assets/reference/coat_expected_look.png (open trench over white shirt + tie + trousers).",
+    "jeans": "MANUAL: user-supplied. Men's grey jeans, on white.",
+    "trousers": "MANUAL: user-supplied. Men's charcoal dress trousers, on white."
+  },
+  "garments_extras": {
+    "coat_women": "assets/garments/extras/coat_women.jpg - black belted wool coat w/ collar, knee-length. Used for the 'coat-w' category (coat on the female model).",
+    "jeans_women": "assets/garments/extras/jeans_women.jpg - not currently in the matrix.",
+    "trousers_women": "assets/garments/extras/trousers_women.jpg - not currently in the matrix."
+  },
+  "references": "assets/reference/*_expected_look.png - target looks per category, used to steer the IDM-VTON optimization prompts (blouse for saree, open coat over shirt+tie, etc.)."
+}

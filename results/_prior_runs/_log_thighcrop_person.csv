@@ -1,0 +1,35 @@
+timestamp,model,category,tag,person,garment,gen_time_sec,wall_sec,cost_usd,cost_inr,within_speed,within_cost,output_path,error
+2026-09-02T07:40:38+00:00,idm-vton,saree,,assets/persons/female.jpg,assets/garments/saree.jpg,,,,,,,results\outputs\idm-vton__saree.png,HTTPError('524 Server Error: <none> for url: https://wu3f66aicakgf0-8000.proxy.runpod.net/tryon')
+2026-09-02T07:43:04+00:00,idm-vton,kurti,,assets/persons/female.jpg,assets/garments/kurti.jpg,9.49,55.45,0.00195,0.173,True,True,results\outputs\idm-vton__kurti.png,
+2026-09-02T07:43:59+00:00,idm-vton,lehenga,,assets/persons/female.jpg,assets/garments/lehenga.jpg,9.48,49.57,0.00195,0.172,True,True,results\outputs\idm-vton__lehenga.png,
+2026-09-02T07:44:49+00:00,idm-vton,top,,assets/persons/female.jpg,assets/garments/top.jpg,9.33,43.4,0.00192,0.17,True,True,results\outputs\idm-vton__top.png,
+2026-09-02T07:45:32+00:00,idm-vton,jumpsuit,,assets/persons/female.jpg,assets/garments/jumpsuit.jpg,9.46,22.64,0.00194,0.172,True,True,results\outputs\idm-vton__jumpsuit.png,
+2026-09-02T07:45:55+00:00,idm-vton,t-shirt,,assets/persons/male.jpg,assets/garments/t-shirt.jpg,9.3,39.54,0.00191,0.169,True,True,results\outputs\idm-vton__t-shirt.png,
+2026-09-02T07:46:34+00:00,idm-vton,shirt,,assets/persons/male.jpg,assets/garments/shirt.jpg,9.47,25.98,0.00195,0.172,True,True,results\outputs\idm-vton__shirt.png,
+2026-09-02T07:47:00+00:00,idm-vton,coat,,assets/persons/male.jpg,assets/garments/coat.jpg,9.71,44.34,0.002,0.177,True,True,results\outputs\idm-vton__coat.png,
+2026-09-02T07:47:45+00:00,idm-vton,jeans,,assets/persons/male.jpg,assets/garments/jeans.jpg,9.32,23.13,0.00192,0.17,True,True,results\outputs\idm-vton__jeans.png,
+2026-09-02T07:48:08+00:00,idm-vton,trousers,,assets/persons/male.jpg,assets/garments/trousers.jpg,9.32,36.02,0.00192,0.17,True,True,results\outputs\idm-vton__trousers.png,
+2026-09-02T07:49:09+00:00,idm-vton,saree,,assets/persons/female.jpg,assets/garments/saree.jpg,9.36,40.71,0.00192,0.17,True,True,results\outputs\idm-vton__saree.png,
+2026-09-02T07:50:38+00:00,catvton,saree,,assets/persons/female.jpg,assets/garments/saree.jpg,7.13,32.76,0.00147,0.13,True,True,results\outputs\catvton__saree.png,
+2026-09-02T07:51:10+00:00,catvton,kurti,,assets/persons/female.jpg,assets/garments/kurti.jpg,6.32,15.26,0.0013,0.115,True,True,results\outputs\catvton__kurti.png,
+2026-09-02T07:51:26+00:00,catvton,lehenga,,assets/persons/female.jpg,assets/garments/lehenga.jpg,6.32,52.42,0.0013,0.115,True,True,results\outputs\catvton__lehenga.png,
+2026-09-02T07:52:18+00:00,catvton,top,,assets/persons/female.jpg,assets/garments/top.jpg,6.3,35.24,0.00129,0.115,True,True,results\outputs\catvton__top.png,
+2026-09-02T07:52:53+00:00,catvton,jumpsuit,,assets/persons/female.jpg,assets/garments/jumpsuit.jpg,6.31,18.53,0.0013,0.115,True,True,results\outputs\catvton__jumpsuit.png,
+2026-09-02T07:53:12+00:00,catvton,t-shirt,,assets/persons/male.jpg,assets/garments/t-shirt.jpg,6.2,15.27,0.00127,0.113,True,True,results\outputs\catvton__t-shirt.png,
+2026-09-02T07:53:27+00:00,catvton,shirt,,assets/persons/male.jpg,assets/garments/shirt.jpg,6.24,28.26,0.00128,0.113,True,True,results\outputs\catvton__shirt.png,
+2026-09-02T07:53:55+00:00,catvton,coat,,assets/persons/male.jpg,assets/garments/coat.jpg,6.3,18.44,0.00129,0.115,True,True,results\outputs\catvton__coat.png,
+2026-09-02T07:54:14+00:00,catvton,jeans,,assets/persons/male.jpg,assets/garments/jeans.jpg,6.22,15.39,0.00128,0.113,True,True,results\outputs\catvton__jeans.png,
+2026-09-02T07:54:29+00:00,catvton,trousers,,assets/persons/male.jpg,assets/garments/trousers.jpg,6.25,38.31,0.00128,0.114,True,True,results\outputs\catvton__trousers.png,
+2026-09-02T07:56:25+00:00,idm-vton,saree,optimized,assets/persons/female.jpg,assets/garments/saree.jpg,,,,,,,results\outputs\idm-vton__saree__optimized.png,HTTPError('524 Server Error: <none> for url: https://wu3f66aicakgf0-8000.proxy.runpod.net/tryon')
+2026-09-02T07:58:53+00:00,idm-vton,kurti,optimized,assets/persons/female.jpg,assets/garments/kurti.jpg,10.47,74.95,0.00215,0.19,True,True,results\outputs\idm-vton__kurti__optimized.png,
+2026-09-02T08:00:08+00:00,idm-vton,lehenga,optimized,assets/persons/female.jpg,assets/garments/lehenga.jpg,11.66,36.12,0.0024,0.212,True,True,results\outputs\idm-vton__lehenga__optimized.png,
+2026-09-02T08:00:44+00:00,idm-vton,jumpsuit,optimized,assets/persons/female.jpg,assets/garments/jumpsuit.jpg,10.77,21.65,0.00221,0.196,True,True,results\outputs\idm-vton__jumpsuit__optimized.png,
+2026-09-02T08:01:30+00:00,idm-vton,saree,optimized,assets/persons/female.jpg,assets/garments/saree.jpg,11.55,23.36,0.00237,0.21,True,True,results\outputs\idm-vton__saree__optimized.png,
+2026-09-02T08:03:10+00:00,idm-vton,kurti,optimized,assets/persons/female.jpg,assets/garments/kurti.jpg,,,,,,,results\outputs\idm-vton__kurti__optimized.png,HTTPError('524 Server Error: <none> for url: https://wu3f66aicakgf0-8000.proxy.runpod.net/tryon')
+2026-09-02T08:05:36+00:00,idm-vton,saree,optimized,assets/persons/female.jpg,assets/garments/saree.jpg,11.52,52.72,0.00237,0.21,True,True,results\outputs\idm-vton__saree__optimized.png,
+2026-09-02T08:06:29+00:00,idm-vton,lehenga,optimized,assets/persons/female.jpg,assets/garments/lehenga.jpg,11.5,46.89,0.00236,0.209,True,True,results\outputs\idm-vton__lehenga__optimized.png,
+2026-09-02T08:07:16+00:00,idm-vton,jumpsuit,optimized,assets/persons/female.jpg,assets/garments/jumpsuit.jpg,10.5,22.14,0.00216,0.191,True,True,results\outputs\idm-vton__jumpsuit__optimized.png,
+2026-09-02T08:08:35+00:00,idm-vton,kurti,optimized,assets/persons/female.jpg,assets/garments/kurti.jpg,,,,,,,results\outputs\idm-vton__kurti__optimized.png,HTTPError('524 Server Error: <none> for url: https://wu3f66aicakgf0-8000.proxy.runpod.net/tryon')
+2026-09-02T08:10:43+00:00,idm-vton,coat,optimized,assets/persons/male.jpg,assets/garments/coat.jpg,11.16,44.62,0.00229,0.203,True,True,results\outputs\idm-vton__coat__optimized.png,
+2026-09-02T08:12:00+00:00,idm-vton,kurti,optimized,assets/persons/female.jpg,assets/garments/kurti.jpg,10.22,40.03,0.0021,0.186,True,True,results\outputs\idm-vton__kurti__optimized.png,
+2026-09-02T08:35:41+00:00,flux-tryon-pro,t-shirt,,assets/persons/male.jpg,assets/garments/t-shirt.jpg,,,,,,,results\outputs\flux-tryon-pro__t-shirt.png,"FalClientHTTPError(message='User is locked. Reason: Exhausted balance. Top up your balance at fal.ai/dashboard/billing.', status_code=403, response_headers={'date': 'Wed, 02 Sep 2026 08:35:43 GMT', 'content-type': 'application/json', 'content-length': '104', 'connection': 'keep-alive', 'vary': 'origin, access-control-request-method, access-control-request-headers', 'access-control-allow-credentials': 'true', 'strict-transport-security': 'max-age=31536000; includeSubDomains', 'x-robots-tag': 'noindex'}, response=<Response [403 Forbidden]>, error_type=None)"

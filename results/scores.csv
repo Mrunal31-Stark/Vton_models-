@@ -1,0 +1,36 @@
+model,category,tag,fit,drape,texture_fidelity,artifacts_inv,face_body_preservation,mean,notes
+# Round 3 (2026-09-02): full head-to-toe person models -- Indian woman (kurta set) + Indian man (black polo + cream chinos + sneakers). Menswear re-run on the casual male base. Womenswear unchanged from round 2 (same female model).
+# 1-5, 5=best. artifacts_inv: 5 = none. mean = avg of the 5. IDM-VTON rows use the OPTIMIZED output where one exists.
+idm-vton,saree,optimized,4,4,4,4,5,4.2,floor-length black saree + matching black blouse + pallu over the left shoulder; scarf-mask fix keeps it clean; face paste-back preserves identity
+idm-vton,kurti,optimized,5,4,4,5,5,4.6,knee-length kurti kept over the model's churidar; placket + collar + slits; catalog-grade
+idm-vton,lehenga,optimized,4,4,4,4,5,4.2,choli + floor-length embroidered flared skirt + sheer dupatta
+idm-vton,top,,4,4,4,4,5,4.2,blue velvet wrap top, side tie visible, kept the palazzo + identity
+idm-vton,jumpsuit,optimized,4,4,4,4,5,4.2,black sleeveless wide-leg jumpsuit, collar + tie belt + straight leg; clean
+idm-vton,t-shirt,,4,4,4,4,5,4.2,clean black crew tee (garment image was black-on-black -> rebuilt from a plain flat-lay); natural fit, kept chinos + sneakers
+idm-vton,shirt,,5,4,4,5,5,4.6,blue/black plaid flannel button-up over the chinos; plaid crisp, full length, identity intact
+idm-vton,jeans,,4,4,4,4,4,4.0,denim applied with visible weave + five-pocket styling, full leg to the ankle; renders a touch darker than the grey source
+idm-vton,trousers,,4,4,4,4,4,4.0,charcoal trousers applied cleanly, full leg, kept the polo + sneakers
+idm-vton,coat,optimized,3,3,4,4,3,3.4,knee-length beige overcoat worn OPEN over the outfit; casual base means no white shirt + tie shows through as in the reference -- the half-repainted polo reads as a dark top tucked into dark trousers; face also drifts slightly on the full-body mask. KNOWN RESIDUAL: needs a formal base photo or FLUX (prompt-directed) to reproduce the shirt+tie look
+idm-vton,coat-w,optimized,4,4,4,5,5,4.4,black belted knee-length wool coat with a fur collar; clean layered drape, identity intact
+catvton,saree,,3,2,3,4,4,3.2,black one-shoulder gown with a thigh slit; full length but no pleats / pallu wrap / blouse
+catvton,kurti,,4,3,4,3,4,3.6,full-length kurti; the model's dupatta becomes a stiff cape on the arm (round-2 output, female model unchanged)
+catvton,lehenga,,4,3,3,4,4,3.6,full 3-piece; dupatta cape artefact; embroidery soft
+catvton,top,,4,4,4,3,4,3.8,velvet wrap top faithful; dupatta cape artefact (round-2 output)
+catvton,jumpsuit,,3,3,4,3,4,3.4,black jumpsuit; the "overall" mask leaves the beige palazzo bleeding through one leg (round-2 output)
+catvton,t-shirt,,2,3,3,3,4,3.0,renders the black tee as a tan long-sleeve mock-neck -- colour + sleeve length both wrong (no text lever to correct)
+catvton,shirt,,4,4,4,4,5,4.2,plaid flannel correct, chinos preserved, clean
+catvton,jeans,,4,4,4,4,4,4.0,grey denim applied with visible texture; full leg; polo kept
+catvton,trousers,,4,4,4,4,4,4.0,charcoal trousers applied cleanly, full leg
+catvton,coat,,3,2,3,3,4,3.0,with the upper-body mask it becomes a short beige blazer + beige trousers, not a knee-length coat; with the full mask it wipes the person entirely
+catvton,coat-w,,3,3,3,2,4,3.0,short coat + dupatta drape artefact + the beige palazzo still showing
+leffa,saree,,2,2,3,3,4,2.8,black asymmetric drape over the churidar, not a saree; grey sheer dupatta artefact
+leffa,kurti,,3,3,3,2,4,3.0,full-length kurti but an oversized tan cape artefact from the dupatta
+leffa,lehenga,,4,4,3,4,4,3.8,flowy floor-length gold gown; reasonable
+leffa,top,,3,4,4,3,4,3.6,velvet wrap top; large blue drape down the side
+leffa,jumpsuit,,3,3,4,2,4,3.2,black jumpsuit + an orange fur blob (dupatta) at the shoulder
+leffa,t-shirt,,3,3,3,3,4,3.2,barely changes the model's polo; low garment fidelity
+leffa,shirt,,2,3,3,3,3,2.8,over-applies the plaid to the whole outfit (plaid jacket + plaid trousers)
+leffa,jeans,,4,4,4,4,4,4.0,grey denim applied, full leg, polo kept -- improved on the full-length base
+leffa,trousers,,4,4,3,4,4,3.8,charcoal trousers applied, full leg -- improved on the full-length base
+leffa,coat,,3,3,4,4,4,3.6,beige coat rendered closed as a coat-suit, no shirt/collar showing
+leffa,coat-w,,3,3,3,2,3,2.8,black coat + burgundy sheer dupatta artefact

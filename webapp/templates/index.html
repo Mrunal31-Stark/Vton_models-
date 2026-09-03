@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Vizzle VTON eval</title>
+<body style="font-family:system-ui,sans-serif;max-width:760px;margin:24px auto;padding:0 12px">
+<h3>Virtual Try-On — eval harness</h3>
+<form method="post" enctype="multipart/form-data">
+  <p>1. Person photo: <input type="file" name="person" accept="image/*" required></p>
+  <p>2. Garment photo: <input type="file" name="garment" accept="image/*" required></p>
+  <p>3. Category:
+    <select name="category">
+      {% for c in categories %}<option>{{ c }}</option>{% endfor %}
+    </select>
+  </p>
+  <p>4. Model:
+    <select name="model">
+      {% for m in models %}<option>{{ m }}</option>{% endfor %}
+    </select>
+    &nbsp;<label><input type="checkbox" name="optimized"> category-aware optimization (IDM-VTON)</label>
+  </p>
+  <button type="submit" style="padding:8px 20px;font-size:15px">Generate</button>
+</form>
+
+{% if error %}<pre style="color:#b00;white-space:pre-wrap">{{ error }}</pre>{% endif %}
+{% if result %}
+  <hr>
+  <p><b>{{ model }}</b>{% if optimized %} <i>(optimized)</i>{% endif %} — {{ category }} — <b>{{ secs }} s</b></p>
+  <img src="data:image/png;base64,{{ result }}" style="max-width:100%;border:1px solid #ddd">
+{% endif %}
+</body>

@@ -1,0 +1,5 @@
+model,category,tag,fit,drape,texture_fidelity,artifacts_inv,face_body_preservation,mean,notes
+# score each 1-5 (5=best). artifacts_inv: 5 = no artifacts. mean = avg of the 5.
+# fill after eyeballing results/outputs/<model>__<category>.png
+idm-vton,saree,baseline,,,,,,,
+idm-vton,saree,optimized,,,,,,,

@@ -1,0 +1,21 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# secrets - never commit
+.env
+*.key
+*.pem
+
+# os
+.DS_Store
+Thumbs.db
+.imgcheck/
+.imgcheck2/
+
+# scratch
+*.mp4
+*.mkv

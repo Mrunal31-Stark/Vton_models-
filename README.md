@@ -22,11 +22,12 @@ CatVTON is the fallback / high-throughput option. See [`results/comparison.md`](
 | 3. Test environment + assets | ✅ harness + 11 test cases (10 categories, coat on both genders), full head-to-toe person models |
 | 4. Run matrix + IDM-VTON optimization | ✅ round 3: IDM-VTON base ×11 + opt ×6, CatVTON ×11, Leffa ×11 — 39 generations (earlier rounds archived) |
 | 5. Score + comparison | ✅ [`results/scores.csv`](results/scores.csv) → [`results/comparison.md`](results/comparison.md) |
-| 6. Screen recording | ✅ [`recording/vizzle_vton_demo_saree.gif`](recording/) — **upload to Google Drive (public) — see below** |
+| 6. Screen recording | ✅ **[Google Drive (public link)](https://drive.google.com/file/d/1qhjQVKnL7z1vQZzcoz0XTVPAF4brJXqb/view?usp=sharing)** — also `recording/vizzle_vton_demo_saree.gif` |
 | 7. Final recommendation | ✅ below + comparison.md |
 
-**Total testing spend: $3.16 / $10 cap** (RunPod only, 3 rounds; fal account unfunded → FLUX/image-apps
-researched but not live-tested). See [`COST_LEDGER.md`](COST_LEDGER.md).
+**Total RunPod spend: $4.34 / $10 cap** — $3.16 the 3 test rounds + $1.17 a later session to host
+the demo for the screen recording; fal account unfunded so FLUX/image-apps researched but not
+live-tested. See [`COST_LEDGER.md`](COST_LEDGER.md).
 
 ---
 
@@ -191,14 +192,16 @@ python webapp/app.py          # http://localhost:5000
 
 ## Screen recording → Google Drive
 
-`recording/vizzle_vton_demo_saree.gif` shows the webapp flow end-to-end (upload person →
-upload garment → pick category + model + optimization → Generate → result, IDM-VTON optimized
-saree in 8.9 s).
+**Public link (Anyone with the link):**
+https://drive.google.com/file/d/1qhjQVKnL7z1vQZzcoz0XTVPAF4brJXqb/view?usp=sharing
 
-**To finish Step 6:** upload that file (or a longer screen-capture of the webapp) to Google
-Drive, set sharing to **"Anyone with the link"**, and paste the link into this README.
-The pods are stopped; the network volume `37ex59gbr7` keeps all weights + the Leffa venv, so a
-fresh pod + `runpod/setup_deps.sh` (~1 min) is enough to record more.
+The recording shows the webapp flow end-to-end (upload person → upload garment → pick category +
+model + optimization → Generate → result) across multiple clothing types. A short local copy is
+also at `recording/vizzle_vton_demo_saree.gif`.
+
+All RunPod resources have since been torn down (pods terminated, network volume deleted). To
+record more, provision a fresh pod + network volume and run `runpod/setup2.sh` for the full
+clone + weight download, then `runpod/server.py`.
 
 ---
 

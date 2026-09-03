@@ -6,10 +6,12 @@ Keep every RunPod invoice + fal usage export for reimbursement (payable only if 
 |------|------|--------|-----|
 | 2026-09-02 | RunPod credit | pre-loaded (not a spend) | +15.00 |
 | 2026-09-02 | RunPod RTX 4090 (secure, EU-RO-1) + 70 GB network volume | 4 pods on 1 network volume across **3 test rounds**: env setup ×4, smoke tests, IDM-VTON baseline + optimized (+ prompt/mask iteration), CatVTON, Leffa (isolated venv). R1 = 10 categories; R2 = 11 (full-body models, coat on both); R3 = menswear re-run on a casual full-length male + coat/prompt tuning. ~4.3 pod-hr total. | **~3.16** |
+| 2026-09-03 | RunPod RTX 4090 (secure, EU-RO-1) | 5th pod: brought the demo server back up so the screen recording could be captured (old pods could not restart, hosts full). Env re-install + 2 warm-ups + the recording session, then terminated. | **~1.17** |
 | — | fal.ai (FLUX Pro VTO, image-apps-v2) | account unfunded ($0, locked) → **not tested, $0** | 0.00 |
-| | | **TOTAL TESTING SPEND** | **~3.16** |
+| | | **TOTAL RUNPOD SPEND** | **~4.33** |
 
-Verified against RunPod balance: **$15.00 → $11.84 = $3.16 actual** (3 rounds). ~32% of the $10 cap.
+Verified against RunPod balance: **$15.00 → $10.67 = $4.33 actual**. ~43% of the $10 cap.
+Ongoing storage for the 70 GB network volume is about $0.007/hr (~$0.17/day) until the volume is deleted.
 
 ## Per-generation unit cost (the number the assignment asks for)
 

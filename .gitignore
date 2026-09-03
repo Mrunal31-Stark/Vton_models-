@@ -19,3 +19,6 @@ Thumbs.db
 # scratch
 *.mp4
 *.mkv
+
+# local-only submission helper, not for the public repo
+docs/submission_email.md

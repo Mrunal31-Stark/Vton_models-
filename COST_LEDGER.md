@@ -4,7 +4,7 @@ Keep every RunPod invoice + fal usage export for reimbursement (payable only if 
 
 | Date | Item | Detail | USD |
 |------|------|--------|-----|
-| 2026-09-02 | RunPod credit | pre-loaded (not a spend) | +15.00 |
+| 2026-09-02 | RunPod credit | you have to add credit in order to run it in runpod | +15.00 |
 | 2026-09-02 | RunPod RTX 4090 (secure, EU-RO-1) + 70 GB network volume | 4 pods on 1 network volume across **3 test rounds**: env setup ×4, smoke tests, IDM-VTON baseline + optimized (+ prompt/mask iteration), CatVTON, Leffa (isolated venv). R1 = 10 categories; R2 = 11 (full-body models, coat on both); R3 = menswear re-run on a casual full-length male + coat/prompt tuning. ~4.3 pod-hr total. | **~3.16** |
 | 2026-09-03 | RunPod RTX 4090 (secure, EU-RO-1) | 5th pod: brought the demo server back up so the screen recording could be captured (old pods could not restart, hosts full). Env re-install + 2 warm-ups + the recording session, then terminated. | **~1.17** |
 | — | fal.ai (FLUX Pro VTO, image-apps-v2) | account unfunded ($0, locked) → **not tested, $0** | 0.00 |
